@@ -10,7 +10,7 @@ import (
 	"math/big"
 )
 
-const difficulty = 18
+const difficulty = 20
 
 type ProofOfWork struct {
 	Block  *Block
@@ -20,7 +20,6 @@ type ProofOfWork struct {
 func NewProof(block *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-difficulty))
-	fmt.Println(target)
 	return &ProofOfWork{block, target}
 }
 
@@ -28,7 +27,7 @@ func (pow *ProofOfWork) joinData(nonce int) []byte {
 	data := bytes.Join([][]byte{
 		pow.Block.PrevHash,
 		pow.Block.Data,
-		toBytes(nonce),
+		toBytes(int64(nonce)),
 		toBytes(difficulty),
 	}, []byte{})
 
@@ -69,7 +68,7 @@ func (pow *ProofOfWork) Validate() bool {
 	return intHash.Cmp(pow.Target) == -1
 }
 
-func toBytes(n int) []byte {
+func toBytes(n int64) []byte {
 	buff := new(bytes.Buffer)
 	err := binary.Write(buff, binary.BigEndian, n)
 	if err != nil {
