@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"math/big"
+	"time"
 )
 
 const difficulty = 20
@@ -27,6 +28,7 @@ func (pow *ProofOfWork) joinData(nonce int) []byte {
 	data := bytes.Join([][]byte{
 		pow.Block.PrevHash,
 		pow.Block.Data,
+		toBytes(time.Now().Unix()),
 		toBytes(int64(nonce)),
 		toBytes(difficulty),
 	}, []byte{})
@@ -48,6 +50,7 @@ func (pow *ProofOfWork) Mine() (int, []byte) {
 		fmt.Printf("\r%x", hash)
 
 		if intHash.Cmp(pow.Target) == -1 {
+			pow.Block.TimeStamp = time.Now().Unix()
 			break
 		} else {
 			nonce++
