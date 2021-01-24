@@ -24,12 +24,6 @@ func createBlock(data string, prevHash []byte) *Block {
 	return block
 }
 
-func (chain *BlockChain) AddBlock(data string) {
-	previous := chain.Blocks[len(chain.Blocks)-1]
-	block := createBlock(data, previous.Hash)
-	chain.Blocks = append(chain.Blocks, block)
-}
-
 func genesis() *Block {
 	return createBlock("Genesis", []byte{})
 }
