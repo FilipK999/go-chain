@@ -85,10 +85,6 @@ func (iterator *Iterator) Next() *Block {
 
 }
 
-// -----------------
-// Utility Functions
-// -----------------
-
 // This function gets called automatically by go-redis
 func (b *Block) MarshalBinary() ([]byte, error) {
 	return json.Marshal(b)
