@@ -14,8 +14,8 @@ type BlockChain struct {
 }
 
 type BlockChainIterator struct {
-	LastHash []byte
-	Database *redis.Client
+	CurrentHash []byte
+	Database    *redis.Client
 }
 
 var ctx = context.TODO()
@@ -61,6 +61,28 @@ func (chain *BlockChain) AddBlock(data string) {
 	_, err = chain.Database.Set(ctx, StrHash(newBlock.Hash), newBlock, 0).Result()
 	Handle(err)
 	_, err = chain.Database.Set(ctx, "lastHash", newBlock.Hash, 0).Result()
+}
+
+func (chain *BlockChain) Iterator() *BlockChainIterator {
+	return &BlockChainIterator{
+		CurrentHash: chain.LastHash,
+		Database:    chain.Database,
+	}
+}
+
+func (iterator *BlockChainIterator) Next() *Block {
+	var block *Block
+
+	item, err := iterator.Database.Get(ctx, StrHash(iterator.CurrentHash)).Result()
+
+	Handle(err)
+	err = json.Unmarshal([]byte(item), &block)
+
+	Handle(err)
+	iterator.CurrentHash = block.PrevHash
+
+	return block
+
 }
 
 // -----------------
