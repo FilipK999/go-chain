@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const difficulty = 12
+const difficulty = 20
 
 type ProofOfWork struct {
 	Block  *Block
