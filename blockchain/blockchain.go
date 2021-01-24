@@ -13,7 +13,7 @@ type BlockChain struct {
 	Database *redis.Client
 }
 
-type BlockChainIterator struct {
+type Iterator struct {
 	CurrentHash []byte
 	Database    *redis.Client
 }
@@ -63,14 +63,14 @@ func (chain *BlockChain) AddBlock(data string) {
 	_, err = chain.Database.Set(ctx, "lastHash", newBlock.Hash, 0).Result()
 }
 
-func (chain *BlockChain) Iterator() *BlockChainIterator {
-	return &BlockChainIterator{
+func (chain *BlockChain) Iterator() *Iterator {
+	return &Iterator{
 		CurrentHash: chain.LastHash,
 		Database:    chain.Database,
 	}
 }
 
-func (iterator *BlockChainIterator) Next() *Block {
+func (iterator *Iterator) Next() *Block {
 	var block *Block
 
 	item, err := iterator.Database.Get(ctx, StrHash(iterator.CurrentHash)).Result()
