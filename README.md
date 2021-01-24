@@ -1,6 +1,5 @@
 # Go Chain
 
-<hr>
 
 A very simple and basic implementation of a blockchain,
 written in Go and stored in a Redis database.
